@@ -1,0 +1,78 @@
+.container {
+  width: 360px;
+  margin: auto;
+}
+
+.toDoTitle {
+  font-family: "Courier New", Courier, monospace;
+}
+
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#inputField {
+  display: inline-block;
+  height: 50px;
+  width: 280px;
+  font-size: 25px;
+  border-radius: 6px;
+  border: 3px solid #1d6dff;
+}
+
+.form__btn {
+  display: inline-block;
+  padding: 0 20px;
+  height: 58px;
+  /* width: 80px; */
+  margin-top: 10px;
+  font-size: 25px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  background: #1d6dff;
+  margin-left: 20px;
+}
+
+#clear {
+  background: red;
+}
+/* #addToDoBtn {
+} */
+
+#toDoContainer {
+  padding: 10px 0;
+}
+
+#toDoContainer div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin: 10px 0;
+  font-size: 25px;
+  border-radius: 6px;
+  background: #68bcf7;
+}
+
+#toDoContainer button {
+  width: 70px;
+  height: 50px;
+  padding: 10px;
+  font-size: 25px;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+}
+
+#toDoContainer button:first-child {
+  margin-right: auto;
+  background: #04ad04;
+}
+
+#toDoContainer button:last-child {
+  margin-left: auto;
+  background: red;
+}
