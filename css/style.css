@@ -13,7 +13,7 @@
   align-items: center;
 }
 
-#inputField {
+#title {
   display: inline-block;
   height: 50px;
   width: 280px;
@@ -22,31 +22,34 @@
   border: 3px solid #1d6dff;
 }
 
-.form__btn {
-  display: inline-block;
-  padding: 0 20px;
-  height: 58px;
-  /* width: 80px; */
-  margin-top: 10px;
-  font-size: 25px;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  background: #1d6dff;
-  margin-left: 20px;
-}
-
 #clear {
   background: red;
 }
+
+.form__btn {
+  width: auto;
+  margin-top: 15px;
+  height: 50px;
+  font-size: 25px;
+  border: none;
+  border-radius: 6px;
+  padding: 0 30px;
+  color: #fff;
+}
+
+.add {
+  margin-right: 27px;
+  background: #1d6dff;
+}
+
 /* #addToDoBtn {
 } */
 
-#toDoContainer {
+#todoContainer {
   padding: 10px 0;
 }
 
-#toDoContainer div {
+.todo__item {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -57,7 +60,7 @@
   background: #68bcf7;
 }
 
-#toDoContainer button {
+.btn {
   width: 70px;
   height: 50px;
   padding: 10px;
@@ -67,12 +70,12 @@
   color: #fff;
 }
 
-#toDoContainer button:first-child {
+.edit__btn:first-child {
   margin-right: auto;
   background: #04ad04;
 }
 
-#toDoContainer button:last-child {
+.delete__btn:last-child {
   margin-left: auto;
   background: red;
 }

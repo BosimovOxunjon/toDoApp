@@ -1,98 +1,87 @@
-let addToDoBtn = document.getElementById("addToDoBtn");
-let toDoContainer = document.getElementById("toDoContainer");
-let title = document.getElementById("inputField");
-let clear = document.getElementById("clear");
-let toDoItem = document.querySelector(".toDoItem");
-// let toDoEdit = document.querySelector(".toDoEdit");
-let toDoText = document.getElementsByClassName("toDoText");
-let toDoDelete = document.querySelector(".toDoDelete");
+let titleInput = document.getElementById("title");
+let addTodoBtn = document.getElementById("addToDoBtn");
+let clearBtn = document.getElementById("clear");
+let toDoContainer = document.getElementById("todoContainer");
 let database = [];
 
-function NewTask(title) {
+if (!localStorage.getItem("database")) {
+  localStorage.setItem("database", "[]");
+}
+
+function Todo(title) {
   this.id = Date.now();
   this.title = title;
   this.updatedAt = new Date();
 }
 
-function addToDo(e) {
-  let newToDo = new NewTask(title.value);
-  database.push(newToDo);
-  title.value = "";
+function createTodo(title) {
+  database.push(new Todo(title));
   display();
+  titleInput.value = "";
 }
 
+function clear() {
+  localStorage.clear();
+  database = [];
+  display();
+  console.log("clear");
+}
+
+addTodoBtn.addEventListener("click", function () {
+  if (titleInput.value.length === 0) alert("Please write something");
+  else {
+    createTodo(titleInput.value);
+  }
+});
+
+clearBtn.addEventListener("click", function () {
+  if (database.length === 0) {
+    alert("There is nothing here");
+    console.log("nimadur");
+  } else {
+    clear();
+  }
+});
+
 function display() {
+  saveLocalStorage();
+
   let htmlContent = "";
   for (let i = 0; i < database.length; i++) {
     htmlContent += `
-    <div data-id=${database[i].id} class="toDoItem">
-      <button data-id=${database[i].id} onclick="editToDo(this)" class="toDoEdit">
-        <i class="fa-solid fa-pen-to-square"></i>
-      </button>
-      <p class="toDoText">${database[i].title}</p>
-      <button ${database[i].id} onclick="deleteBtn(this)" class="toDoDelete">
-        <i class="fa-sharp fa-solid fa-trash"></i>
-      </button>
-    </div>
+      <div data-id=${database[i].id} class="todo__item">
+        <button data-id=${database[i].id} onclick="editBtn(this)" class="edit__btn btn">
+          <i class="fa-solid fa-pen-to-square"></i>
+        </button>
+        <p class="todo__text">${database[i].title}</p>
+        <button data-id=${database[i].id} onclick="deleteBtn(this)" class="delete__btn btn">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
     `;
-    console.log("Display function is working true");
   }
   toDoContainer.innerHTML = htmlContent;
 }
 
-addToDoBtn.addEventListener("click", function () {
-  if (title.value.length == 0) {
-    alert("Please write something");
-  } else {
-    const inputItem = title.value;
-    console.log(inputItem);
-    addToDo();
-  }
-});
-
-function editToDo(e) {
+function editBtn(e) {
   let id = e.dataset.id;
-  let toDo = database.find((item) => {
-    return item.id == id;
-  });
-  let title = prompt("You can edit", toDo.title);
-  toDo.title = title;
-  toDo.updatedAt = new Date();
+  let todo = database.find((item) => item.id == id);
+  let newTitle = prompt("You can edit", todo.title);
+  console.log(todo);
+  todo.title = newTitle;
+  if (!todo.title) return;
+  title.value = "";
+  todo.updatedAt = new Date();
   display();
 }
 
 function deleteBtn(e) {
-  let deleteId = e.dataset.id;
-  database = database.filter((item) => {
-    item.id != deleteId;
-  });
-  console.log("remove element");
+  let id = e.parentElement.dataset.id;
+  database = database.filter((item) => item.id != id);
   display();
+  console.log(database);
 }
 
-// clear.addEventListener("click", function () {
-//   let toDoItem = document.querySelectorAll(".toDoItem");
-//   if (toDoItem.length == 0) {
-//     alert("There are nothing here");
-//   } else {
-//     let deleteBtn = database.splice();
-//   }
-// });
-
-// function saveToLocalStorage(saveStorage, storedName) {
-//   // for (let i = 0; i < database.length; i++) {
-//   let saveStorage = localStorage.setItem("database", JSON.stringify(database));
-//   let storedName = localStorage.getItem(saveStorage);
-//   console.log(storedName);
-//   console.log(saveStorage);
-//   // }
-// }
-
-document.addEventListener("DOMContentLoaded", function () {
-  display();
-  console.log("display() function");
-  // database = [...saveToLocalStorage(saveStorage, storedName)];
-  console.log(display());
-  console.log(database);
-  // [...saveToLocalStorage(saveStorage, storedName)];
-});
+function saveLocalStorage() {
+  localStorage.setItem("database", JSON.stringify(database));
+}
