@@ -79,3 +79,13 @@
   margin-left: auto;
   background: red;
 }
+
+#deleteSelectedElementsBtn {
+  background-color: rgb(72, 255, 0);
+  display: none;
+}
+
+.todo__text--active {
+  color: red;
+  text-decoration: line-through;
+}

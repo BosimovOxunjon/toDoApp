@@ -1,8 +1,14 @@
-let titleInput = document.getElementById("title");
+let container = document.querySelector(".container");
+let form = document.forms[0];
+let titleInput = form.title;
 let addTodoBtn = document.getElementById("addToDoBtn");
 let clearBtn = document.getElementById("clear");
 let toDoContainer = document.getElementById("todoContainer");
-let database = [];
+let deleteSelectedElements = document.getElementById(
+  "deleteSelectedElementsBtn"
+);
+
+let selectedElements = [];
 
 if (!localStorage.getItem("database")) {
   localStorage.setItem("database", "[]");
@@ -11,77 +17,113 @@ if (!localStorage.getItem("database")) {
 function Todo(title) {
   this.id = Date.now();
   this.title = title;
+  this.isChecked = false;
   this.updatedAt = new Date();
 }
 
-function createTodo(title) {
-  database.push(new Todo(title));
-  display();
-  titleInput.value = "";
-}
-
 function clear() {
-  localStorage.clear();
-  database = [];
+  delete database;
   display();
+  localStorage.clear();
   console.log("clear");
+  saveLocalStorage();
 }
-
-addTodoBtn.addEventListener("click", function () {
-  if (titleInput.value.length === 0) alert("Please write something");
-  else {
-    createTodo(titleInput.value);
-  }
-});
 
 clearBtn.addEventListener("click", function () {
-  if (database.length === 0) {
-    alert("There is nothing here");
-    console.log("nimadur");
-  } else {
-    clear();
-  }
+  saveLocalStorage();
+  localStorage.clear();
 });
 
 function display() {
-  saveLocalStorage();
-
+  database = JSON.parse(localStorage.getItem("database"));
   let htmlContent = "";
-  for (let i = 0; i < database.length; i++) {
+  database.forEach((todo) => {
+    const { id, title, isChecked } = todo;
     htmlContent += `
-      <div data-id=${database[i].id} class="todo__item">
-        <button data-id=${database[i].id} onclick="editBtn(this)" class="edit__btn btn">
-          <i class="fa-solid fa-pen-to-square"></i>
-        </button>
-        <p class="todo__text">${database[i].title}</p>
-        <button data-id=${database[i].id} onclick="deleteBtn(this)" class="delete__btn btn">
-          <i class="fa-solid fa-trash"></i>
-        </button>
-      </div>
+    <li data-id=${id} data-check=${isChecked} class="todo__item">
+      <button data-id=${id} onclick="editBtn(this)" class="edit__btn btn">
+      <i class="fa-solid fa-pen-to-square"></i>
+      </button>
+      <p onclick="selectBtn(this)" class="todo__text">${title}</p>
+      <button data-id=${id} onclick="deleteBtn(this)" class="delete__btn btn">
+      <i class="fa-solid fa-trash"></i>
+      </button>
+    </li>
     `;
-  }
+  });
   toDoContainer.innerHTML = htmlContent;
 }
 
+let database = [];
+
 function editBtn(e) {
   let id = e.dataset.id;
+  console.log(id);
   let todo = database.find((item) => item.id == id);
   let newTitle = prompt("You can edit", todo.title);
-  console.log(todo);
   todo.title = newTitle;
-  if (!todo.title) return;
+  if (!todo.title) return newTitle === todo.title;
+  if (!todo.title) {
+    return deleteBtn();
+  }
   title.value = "";
   todo.updatedAt = new Date();
+  saveLocalStorage();
   display();
 }
 
 function deleteBtn(e) {
-  let id = e.parentElement.dataset.id;
+  let id = e.dataset.id;
+  console.log(id);
   database = database.filter((item) => item.id != id);
+  localStorage.setItem("database", JSON.stringify(database));
   display();
+  saveLocalStorage();
   console.log(database);
+  console.log(localStorage);
 }
 
 function saveLocalStorage() {
   localStorage.setItem("database", JSON.stringify(database));
 }
+
+function selectBtn(e) {
+  let id = e.parentElement.dataset.id;
+  let findElementId = database.find((item) => item.id == id);
+
+  selectedElements.push(findElementId);
+  e.classList.add("todo__text--active");
+  console.log(selectedElements);
+}
+
+document.addEventListener("DOMContentLoaded", display());
+
+function createTodo(title) {
+  const todo = new Todo(title);
+  database.push(todo);
+  let content = ` 
+  <li data-id=${todo.id} class="todo__item">
+    <button data-id=${todo.id} onclick="editBtn(this)" class="edit__btn btn">
+      <i class="fa-solid fa-pen-to-square"></i>
+    </button>
+    <p onclick="selectBtn(this)" class="todo__text">${todo.title}</p>
+    <button data-id=${todo.id} onclick="deleteBtn(this)" class="delete__btn btn">
+      <i class="fa-solid fa-trash"></i>
+    </button>
+  </li>`;
+  toDoContainer.innerHTML += content;
+
+  saveLocalStorage();
+}
+
+form.addEventListener("submit", async function (e) {
+  e.preventDefault();
+  let titleInput = form.title;
+  if (!titleInput.value) {
+    alert("Please write something");
+    return;
+  }
+  createTodo(titleInput.value);
+  saveLocalStorage();
+  form.reset();
+});

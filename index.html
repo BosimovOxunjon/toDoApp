@@ -16,10 +16,18 @@
   </head>
   <body>
     <div class="container">
-      <input id="title" type="text" />
-      <button id="addToDoBtn" class="form__btn add">Add</button>
-      <button id="clear" class="form__btn">Clear All</button>
-      <div id="todoContainer"></div>
+      <form action="">
+        <input id="title" name="title" type="text" />
+        <button id="addToDoBtn" class="form__btn add">Add</button>
+      </form>
+      <button
+        id="clear"
+        onclick="window.location.reload(true)"
+        class="form__btn"
+      >
+        Clear All
+      </button>
+      <ul id="todoContainer"></ul>
     </div>
     <script src="js/index.js"></script>
   </body>
